@@ -1,9 +1,9 @@
 name: CI
 
 env:
-  FRONTEND_IMAGE: cr.yandex/crpqppq44fvldj2f1brc/frontend:${{ github.sha }}
-  BACKEND_IMAGE: cr.yandex/crpqppq44fvldj2f1brc/backend:${{ github.sha }}
-  NGINX_IMAGE: cr.yandex/crpqppq44fvldj2f1brc/nginx:${{ github.sha }}
+  FRONTEND_IMAGE: cr.yandex/${{ vars.CR_REGISTRY }}/frontend:${{ github.sha }}
+  BACKEND_IMAGE: cr.yandex/${{ vars.CR_REGISTRY }}/backend:${{ github.sha }}
+  NGINX_IMAGE: cr.yandex/${{ vars.CR_REGISTRY }}/nginx:${{ github.sha }}
 
 on:
   push:
@@ -27,11 +27,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      # - name: Build, tag, and push image to Yandex Cloud Container Registry
-      #   env:
-      #     CR_REGISTRY: crp00000000000000000
-      #     CR_REPOSITORY: my-cr-repo
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-      #     docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+      - name: Build, tag, and push image to Yandex Cloud Container Registry [Nginx]
+        run: |
+          docker build -t ${{ env.NGINX_IMAGE }} -f ./nginx/Dockerfile ./nginx
+          docker push ${{ env.NGINX_IMAGE }}
