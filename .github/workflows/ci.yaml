@@ -31,3 +31,22 @@ jobs:
         run: |
           docker build -t ${{ env.NGINX_IMAGE }} -f ./nginx/Dockerfile ./nginx
           docker push ${{ env.NGINX_IMAGE }}
+
+      - name: Deploy COI VM
+        id: deploy-coi
+        uses: yc-actions/yc-coi-deploy@v2
+        env:
+          CR_REGISTRY: crp00000000000000000
+          CR_REPOSITORY: my-cr-repo
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: ${{ vars.FOLDER_ID }}
+          vm-name: microservices
+          vm-service-account-id: ${{ vars.SERVICE_ACCOUNT_ID }}
+          vm-cores: 1
+          vm-memory: 2Gb
+          vm-core-fraction: 5
+          vm-subnet-id: ${{ vars.SUBNET_ID }}
+          user-data-path: './user-data.yaml'
+          docker-compose-path: './docker-compose.yaml'
