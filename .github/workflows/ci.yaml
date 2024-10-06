@@ -44,9 +44,9 @@ jobs:
           folder-id: ${{ vars.FOLDER_ID }}
           vm-name: microservices
           vm-service-account-id: ${{ vars.SERVICE_ACCOUNT_ID }}
-          vm-cores: 1
+          vm-cores: 2
           vm-memory: 2Gb
-          vm-core-fraction: 5
+          vm-core-fraction: 20
           vm-subnet-id: ${{ vars.SUBNET_ID }}
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
