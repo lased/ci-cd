@@ -31,12 +31,24 @@ jobs:
         run: |
           docker build -t ${{ env.NGINX_IMAGE }} -f ./nginx/Dockerfile ./nginx
           docker push ${{ env.NGINX_IMAGE }}
+      
+      - name: Build, tag, and push image to Yandex Cloud Container Registry [Frontend]
+        run: |
+          docker build -t ${{ env.FRONTEND_IMAGE }} -f ./frontend/Dockerfile ./frontend
+          docker push ${{ env.FRONTEND_IMAGE }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry [Backend]
+        run: |
+          docker build -t ${{ env.BACKEND_IMAGE }} -f ./backend/Dockerfile ./backend
+          docker push ${{ env.BACKEND_IMAGE }}
 
       - name: Deploy COI VM
         id: deploy-coi
         uses: yc-actions/yc-coi-deploy@v2
         env:
           NGINX_IMAGE: ${{ env.NGINX_IMAGE }}
+          BACKEND_IMAGE: ${{ env.BACKEND_IMAGE }}
+          FRONTEND_IMAGE: ${{ env.FRONTEND_IMAGE }}
           YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
           YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
         with:
@@ -47,6 +59,7 @@ jobs:
           vm-cores: 2
           vm-memory: 2Gb
           vm-core-fraction: 20
+          vm-disk-size: 15
           vm-subnet-id: ${{ vars.SUBNET_ID }}
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
