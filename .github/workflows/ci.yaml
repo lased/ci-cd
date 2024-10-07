@@ -14,7 +14,7 @@ on:
       - main
 
 jobs:
-  build_and_test:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
         run: |
           docker build -t ${{ env.NGINX_IMAGE }} -f ./nginx/Dockerfile ./nginx
           docker push ${{ env.NGINX_IMAGE }}
-      
+
       - name: Build, tag, and push image to Yandex Cloud Container Registry [Frontend]
         run: |
           docker build -t ${{ env.FRONTEND_IMAGE }} -f ./frontend/Dockerfile ./frontend
@@ -59,7 +59,7 @@ jobs:
           vm-cores: 2
           vm-memory: 2Gb
           vm-core-fraction: 20
-          vm-disk-size: 15
+          vm-disk-size: 15Gb
           vm-subnet-id: ${{ vars.SUBNET_ID }}
           user-data-path: './user-data.yaml'
           docker-compose-path: './docker-compose.yaml'
