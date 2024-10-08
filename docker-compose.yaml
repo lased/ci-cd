@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: {{ env.NGINX_IMAGE }}
+    ports:
+      - '80:80'
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+  
+  frontend:
+    image: {{ env.FRONTEND_IMAGE }}
+    restart: always
+
+  backend:
+    image: {{ env.BACKEND_IMAGE }}
+    restart: always
